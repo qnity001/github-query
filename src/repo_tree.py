@@ -30,7 +30,7 @@ def display_tree(tree: dict, print = None):
 
     for name, subtree in tree.items():
         if isinstance(subtree, dict):
-            new = print.add(f"{name}")
+            new = print.add(f"[blue]{name}")
             display_tree(subtree, new)
         else:
             print.add(name)
