@@ -1,9 +1,12 @@
-import os
-import sys
+from pathlib import Path
 
+# Creates a tree and returns a dictionary
 def create_tree(path):
+    tree = {}
     for root, dirs, files in os.walk(path):
-        print(os.path.basename(root))
+        root_name = os.path.basename(root)
+        if root_name not in tree:  # Checks if a folder is there in tree or not  ## A folder is always a dict  
+            tree[root_name] = {} # Create an empty dict for starters
         for file in files:
             print(file)
 
