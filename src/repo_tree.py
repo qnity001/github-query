@@ -3,12 +3,12 @@ from pathlib import Path
 # Creates a tree and returns a dictionary
 def create_tree(path):
     tree = {}
-    for root, dirs, files in os.walk(path):
-        root_name = os.path.basename(root)
-        if root_name not in tree:  # Checks if a folder is there in tree or not  ## A folder is always a dict  
-            tree[root_name] = {} # Create an empty dict for starters
-        for file in files:
-            print(file)
+    for element in path.iterdir():
+        if element.is_dir(): # if the item is a folder
+            tree[element.name] = create_tree(element)
+        elif element.is_file():
+            tree[element.name] = None
+    return tree
 
 # later argparse
 folder_path = Path(input("Enter the root directory path: "))
@@ -18,3 +18,5 @@ if folder_path.exists() and folder_path.is_dir():
 
 else:
     print("User input is invalid")
+
+print(create_tree(folder_path))
