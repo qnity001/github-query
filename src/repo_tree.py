@@ -2,6 +2,11 @@ from pathlib import Path
 from rich.tree import Tree
 from rich.console import Console
 
+extensions = [".py", ".html", ".css", ".js", ".java", ".json"]
+files = ["README.md", "requirements.txt", "manual.txt"]
+
+##### FUNCTIONS ######
+
 # Creates a tree and returns a dictionary
 def create_tree(path):
     tree = {}
@@ -9,9 +14,13 @@ def create_tree(path):
         if element.is_dir(): # if the item is a folder
             tree[element.name] = create_tree(element)
         elif element.is_file():
+            if element.name not in files:
+                for ex in extensions:
+                    if element.name.endswith(ex):
+                        tree[element.name] = None
+                continue
             tree[element.name] = None
     return tree
-
 
 # Display logic for testing only
 def display_tree(tree: dict, print = None):
@@ -26,6 +35,8 @@ def display_tree(tree: dict, print = None):
         else:
             print.add(name)
     return print
+
+#### MAIN ####
 
 # later argparse
 folder_path = Path(input("Enter the root directory path: "))
