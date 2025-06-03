@@ -14,6 +14,8 @@ def create_tree(path):
             tree[element.name] = None
     return tree
 
+
+# Display logic for testing only
 def display_tree(tree: dict, print = None):
     # Print the root
     if print is None:
