@@ -1,6 +1,7 @@
 from pathlib import Path
 from rich.tree import Tree
 from rich.console import Console
+import sys
 
 extensions = [".py", ".html", ".css", ".js", ".java", ".json"]
 files = ["README.md", "requirements.txt", "manual.txt"]
@@ -46,6 +47,7 @@ if folder_path.exists() and folder_path.is_dir():
 
 else:
     print("User input is invalid")
+    sys.exit(1)
 
 console = Console()
 console.print(display_tree(create_tree(folder_path)))
