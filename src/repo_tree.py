@@ -2,8 +2,6 @@ from pathlib import Path
 from rich.tree import Tree
 from rich.console import Console
 
-console = Console()
-
 # Creates a tree and returns a dictionary
 def create_tree(path):
     tree = {}
@@ -38,4 +36,5 @@ if folder_path.exists() and folder_path.is_dir():
 else:
     print("User input is invalid")
 
+console = Console()
 console.print(display_tree(create_tree(folder_path)))
