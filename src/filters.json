@@ -1,0 +1,4 @@
+{
+    "extensions" : [".py", ".html", ".css", ".js", ".java", ".json"],
+    "files" : ["README.md", "requirements.txt", "manual.txt"]
+}
