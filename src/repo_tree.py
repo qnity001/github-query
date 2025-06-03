@@ -1,4 +1,8 @@
 from pathlib import Path
+from rich.tree import Tree
+from rich.console import Console
+
+console = Console()
 
 # Creates a tree and returns a dictionary
 def create_tree(path):
@@ -10,6 +14,19 @@ def create_tree(path):
             tree[element.name] = None
     return tree
 
+def display_tree(tree: dict, print = None):
+    # Print the root
+    if print is None:
+        print = Tree(f"[bold]Root Directory")
+
+    for name, subtree in tree.items():
+        if isinstance(subtree, dict):
+            new = print.add(f"{name}")
+            display_tree(subtree, new)
+        else:
+            print.add(name)
+    return print
+
 # later argparse
 folder_path = Path(input("Enter the root directory path: "))
 
@@ -19,4 +36,4 @@ if folder_path.exists() and folder_path.is_dir():
 else:
     print("User input is invalid")
 
-print(create_tree(folder_path))
+console.print(display_tree(create_tree(folder_path)))
