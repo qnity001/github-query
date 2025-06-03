@@ -11,13 +11,10 @@ def create_tree(path):
             print(file)
 
 # later argparse
-folder_path = input("Enter the root directory path: ")
+folder_path = Path(input("Enter the root directory path: "))
 
-if not os.path.isdir(folder_path):
-    print("Invalid folder path. Please try again.")
-    sys.exit(1)
+if folder_path.exists() and folder_path.is_dir():
+    print("User input is correct")
 
 else:
-    print("The input is correct")
-
-create_tree(folder_path)
+    print("User input is invalid")
