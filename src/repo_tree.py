@@ -43,6 +43,16 @@ def parserepo():
     temp_repo_path.mkdir(exist_ok=True)
     return Path(temp_repo_path)
 
+# Error handling for shutil
+def handle(func, path, exc_info):
+    import stat
+    import os
+    if not os.access(path, os.W_OK):
+        os.chmod(path, stat.S_IWUSR)
+        func(path)
+    else:
+        raise
+
 # Display logic for testing only
 def display_tree(tree: dict, print = None):
     # Print the root
@@ -80,5 +90,6 @@ else:
 console = Console()
 if temp_exists:
     console.print(display_tree(create_tree(temp_repo_path)))
+    shutil.rmtree(str(temp_repo_path), onexc=handle)
 else:
     console.print(display_tree(create_tree(Path(user_input))))
