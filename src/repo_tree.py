@@ -16,7 +16,7 @@ def create_tree(path):
     tree = {}
     for element in path.iterdir():
         if element.is_dir(): # if the item is a folder
-            if element.name in ignore:
+            if element.name in ignore or (element.name).startswith("."):
                 continue
             tree[element.name] = create_tree(element)
         elif element.is_file():
@@ -34,6 +34,15 @@ def include(name):
                 return True
         return False
     return True
+
+# Parse GitHub Repository
+def parserepo():
+    repo_root = Path(__file__).parent.parent
+    temp_path = repo_root / "temp"
+    temp_path.mkdir(exist_ok=True)
+    temp_repo_path = temp_path / "temp_repo"
+    temp_path.mkdir(exist_ok=True)
+    return Path(temp_repo_path)
 
 # Display logic for testing only
 def display_tree(tree: dict, print = None):
@@ -54,12 +63,13 @@ def display_tree(tree: dict, print = None):
 # later argparse
 user_input = input("Enter the root directory path or GitHub link: ")
 
-temp_exists = False
 if user_input.startswith("https://github.com/"):
-    temp_path = tempfile.mkdtemp()
-    temp_exists = True
+    temp_path = parserepo()
     subprocess.run(["git", "clone", user_input, temp_path])
-    folder_path = Path(temp_path)
+    console = Console()
+    console.print(display_tree(create_tree(temp_path)))
+    shutil.rmtree(temp_path)
+    exit()
 
 else:
     folder_path = Path(user_input)
@@ -75,5 +85,3 @@ else:
 console = Console()
 console.print(display_tree(create_tree(folder_path)))
 
-if temp_exists:
-    shutil.rmtree(temp_path)
