@@ -3,6 +3,9 @@ from rich.tree import Tree
 from rich.console import Console
 import sys
 from load_filter import filter
+import subprocess
+import tempfile
+import shutil
 
 extensions, files, ignore = filter(Path(__file__).parent / "filters.json")
 
@@ -21,6 +24,7 @@ def create_tree(path):
                 tree[element.name] = True
     return tree
 
+# Checks for validity against filters.json
 def include(name):
     if name in ignore:
         return False
@@ -48,7 +52,15 @@ def display_tree(tree: dict, print = None):
 #### MAIN ####
 
 # later argparse
-folder_path = Path(input("Enter the root directory path or GitHub link: "))
+user_input = input("Enter the root directory path or GitHub link: ")
+
+if user_input.startswith("https://github.com/"):
+    temp_path = tempfile.mkdtemp()
+    subprocess.run(["git", "clone", user_input, temp_path])
+    folder_path = Path(temp_path)
+
+else:
+    folder_path = Path(user_input)
 
 if folder_path.exists() and folder_path.is_dir():
     print("User input is correct")
@@ -59,3 +71,5 @@ else:
 
 console = Console()
 console.print(display_tree(create_tree(folder_path)))
+
+shutil.rmtree(temp_path)
