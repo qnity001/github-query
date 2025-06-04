@@ -4,7 +4,6 @@ from rich.console import Console
 import sys
 from load_filter import filter
 import subprocess
-import tempfile
 import shutil
 
 extensions, files, ignore = filter(Path(__file__).parent / "filters.json")
@@ -63,11 +62,11 @@ def display_tree(tree: dict, print = None):
 # later argparse
 user_input = input("Enter the root directory path or GitHub link: ")
 
+temp_exists = False
 if "github.com" in user_input:
+    temp_exists = True
     temp_repo_path = parserepo() # received in Path format
     subprocess.run(["git", "clone", user_input, temp_repo_path])
-    console = Console()
-    console.print(display_tree(create_tree(temp_repo_path)))
 
 else:
     folder_path = Path(user_input)
@@ -78,5 +77,8 @@ else:
         print("User input is invalid")
         sys.exit(1)
 
-    console = Console()
-    console.print(display_tree(create_tree(folder_path)))
+console = Console()
+if temp_exists:
+    console.print(display_tree(create_tree(temp_repo_path)))
+else:
+    console.print(display_tree(create_tree(Path(user_input))))
