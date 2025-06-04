@@ -35,13 +35,13 @@ def include(name):
         return False
     return True
 
-# Parse GitHub Repository
+# Returns path to a temp directory
 def parserepo():
     repo_root = Path(__file__).parent.parent
     temp_path = repo_root / "temp"
     temp_path.mkdir(exist_ok=True)
     temp_repo_path = temp_path / "temp_repo"
-    temp_path.mkdir(exist_ok=True)
+    temp_repo_path.mkdir(exist_ok=True)
     return Path(temp_repo_path)
 
 # Display logic for testing only
@@ -63,25 +63,21 @@ def display_tree(tree: dict, print = None):
 # later argparse
 user_input = input("Enter the root directory path or GitHub link: ")
 
+yes = False
 if user_input.startswith("https://github.com/"):
-    temp_path = parserepo()
-    subprocess.run(["git", "clone", user_input, temp_path])
+    temp_repo_path = parserepo() # received in Path format
+    subprocess.run(["git", "clone", user_input, temp_repo_path])
     console = Console()
-    console.print(display_tree(create_tree(temp_path)))
-    shutil.rmtree(temp_path)
-    exit()
+    console.print(display_tree(create_tree(temp_repo_path)))
 
 else:
     folder_path = Path(user_input)
+    if folder_path.exists() and folder_path.is_dir():
+        print("User input is correct")
 
-# Check if user input is valid
-if folder_path.exists() and folder_path.is_dir():
-    print("User input is correct")
+    else:
+        print("User input is invalid")
+        sys.exit(1)
 
-else:
-    print("User input is invalid")
-    sys.exit(1)
-
-console = Console()
-console.print(display_tree(create_tree(folder_path)))
-
+    console = Console()
+    console.print(display_tree(create_tree(folder_path)))
