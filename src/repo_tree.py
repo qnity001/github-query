@@ -15,13 +15,17 @@ def create_tree(path):
         if element.is_dir(): # if the item is a folder
             tree[element.name] = create_tree(element)
         elif element.is_file():
-            if element.name not in files:
-                for ex in extensions:
-                    if element.name.endswith(ex):
-                        tree[element.name] = None
-                continue
-            tree[element.name] = None
+            if include(element.name):
+                tree[element.name] = True
     return tree
+
+def include(name):
+    if name not in files:
+        for ex in extensions:
+            if name.endswith(ex):
+                return True
+        return False
+    return True
 
 # Display logic for testing only
 def display_tree(tree: dict, print = None):
