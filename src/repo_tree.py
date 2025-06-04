@@ -4,7 +4,7 @@ from rich.console import Console
 import sys
 from load_filter import filter
 
-extensions, files = filter("filters.json")
+extensions, files = filter(Path(__file__).parent / "filters.json")
 
 ##### FUNCTIONS ######
 
