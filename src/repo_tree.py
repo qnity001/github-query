@@ -2,6 +2,10 @@ from pathlib import Path
 from rich.tree import Tree
 from rich.console import Console
 import sys
+from load_filter import filter
+
+ex, file = filter("filters.json")
+print(ex, file)
 
 extensions = [".py", ".html", ".css", ".js", ".java", ".json"]
 files = ["README.md", "requirements.txt", "manual.txt"]
