@@ -48,7 +48,7 @@ def display_tree(tree: dict, print = None):
 #### MAIN ####
 
 # later argparse
-folder_path = Path(input("Enter the root directory path: "))
+folder_path = Path(input("Enter the root directory path or GitHub link: "))
 
 if folder_path.exists() and folder_path.is_dir():
     print("User input is correct")
