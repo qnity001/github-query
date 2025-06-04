@@ -63,7 +63,7 @@ def display_tree(tree: dict, print = None):
 # later argparse
 user_input = input("Enter the root directory path or GitHub link: ")
 
-if user_input.startswith("https://github.com/"):
+if "github.com" in user_input:
     temp_repo_path = parserepo() # received in Path format
     subprocess.run(["git", "clone", user_input, temp_repo_path])
     console = Console()
