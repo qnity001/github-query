@@ -16,7 +16,7 @@ def create_tree(path):
     tree = {}
     for element in path.iterdir():
         if element.is_dir(): # if the item is a folder
-            if element.name == "__pycache__":
+            if element.name in ignore:
                 continue
             tree[element.name] = create_tree(element)
         elif element.is_file():
