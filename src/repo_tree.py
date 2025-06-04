@@ -64,6 +64,7 @@ if user_input.startswith("https://github.com/"):
 else:
     folder_path = Path(user_input)
 
+# Check if user input is valid
 if folder_path.exists() and folder_path.is_dir():
     print("User input is correct")
 
