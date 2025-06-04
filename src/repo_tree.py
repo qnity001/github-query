@@ -35,6 +35,9 @@ def include(name):
         return False
     return True
 
+# Parse GitHub Repository
+
+
 # Display logic for testing only
 def display_tree(tree: dict, print = None):
     # Print the root
@@ -54,8 +57,10 @@ def display_tree(tree: dict, print = None):
 # later argparse
 user_input = input("Enter the root directory path or GitHub link: ")
 
+temp_exists = False
 if user_input.startswith("https://github.com/"):
     temp_path = tempfile.mkdtemp()
+    temp_exists = True
     subprocess.run(["git", "clone", user_input, temp_path])
     folder_path = Path(temp_path)
 
@@ -72,4 +77,5 @@ else:
 console = Console()
 console.print(display_tree(create_tree(folder_path)))
 
-shutil.rmtree(temp_path)
+if temp_exists:
+    shutil.rmtree(temp_path)
