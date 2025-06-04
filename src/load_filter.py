@@ -4,6 +4,6 @@ def filter(path):
     with open(path) as file:
         data = file.read()
     filters = json.loads(data)
-    return filters
+    return filters["extensions"], filters["files"]
 
 print(filter("filters.json"))
