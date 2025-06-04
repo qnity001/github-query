@@ -1,7 +1,9 @@
 import json
 
-with open("filters.json") as file:
-    data = file.read()
+def filter(path):
+    with open(path) as file:
+        data = file.read()
+    filters = json.loads(data)
+    return filters
 
-filters = json.loads(data)
-print(filters)
+print(filter("filters.json"))
