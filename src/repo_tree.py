@@ -1,7 +1,6 @@
 from pathlib import Path
-from return_path import save_directory, handle
+from return_path import save_directory, delete_link_repo
 from load_filter import filter
-import shutil
 from display_tree import display
 
 extensions, files, ignore = filter(Path(__file__).parent / "filters.json")
@@ -37,8 +36,8 @@ def include(name):
 # later argparse
 user_input = input("Enter the root directory path or GitHub link: ")
 folder_path, temp_exists = save_directory(user_input)
+
 tree = create_tree(folder_path)
 display(tree)
 
-if temp_exists:
-    shutil.rmtree(str(folder_path), onexc=handle)
+delete_link_repo(user_input, folder_path)
