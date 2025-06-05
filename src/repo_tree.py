@@ -1,10 +1,10 @@
 from pathlib import Path
-from rich.tree import Tree
 from rich.console import Console
 import sys
 from load_filter import filter
 import subprocess
 import shutil
+from display_tree import display
 
 extensions, files, ignore = filter(Path(__file__).parent / "filters.json")
 
@@ -53,20 +53,6 @@ def handle(func, path, exc_info):
     else:
         raise
 
-# Display logic for testing only
-def display_tree(tree: dict, print = None):
-    # Print the root
-    if print is None:
-        print = Tree(f"[bold]Root Directory")
-
-    for name, subtree in tree.items():
-        if isinstance(subtree, dict):
-            new = print.add(f"[blue]{name}")
-            display_tree(subtree, new)
-        else:
-            print.add(name)
-    return print
-
 #### MAIN ####
 
 # later argparse
@@ -89,7 +75,7 @@ else:
 
 console = Console()
 if temp_exists:
-    console.print(display_tree(create_tree(temp_repo_path)))
+    console.print(display(create_tree(temp_repo_path)))
     shutil.rmtree(str(temp_repo_path), onexc=handle)
 else:
-    console.print(display_tree(create_tree(Path(user_input))))
+    console.print(display(create_tree(Path(user_input))))
