@@ -1,5 +1,4 @@
 from pathlib import Path
-from rich.console import Console
 import sys
 from load_filter import filter
 import subprocess
@@ -73,12 +72,14 @@ else:
         print("User input is invalid")
         sys.exit(1)
 
-
 if temp_exists:
     tree = create_tree(temp_repo_path)
     shutil.rmtree(str(temp_repo_path), onexc=handle)
 else:
     tree = create_tree(Path(user_input))
 
+"""
 console = Console()
 console.print(display(tree))
+"""
+display(tree)
