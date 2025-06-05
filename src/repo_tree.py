@@ -73,11 +73,12 @@ else:
         print("User input is invalid")
         sys.exit(1)
 
-console = Console()
+
 if temp_exists:
     tree = create_tree(temp_repo_path)
-    console.print(display(tree))
     shutil.rmtree(str(temp_repo_path), onexc=handle)
 else:
     tree = create_tree(Path(user_input))
-    console.print(display(tree))
+
+console = Console()
+console.print(display(tree))
