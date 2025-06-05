@@ -1,8 +1,6 @@
 from pathlib import Path
-import sys
 from return_path import save_directory, handle
 from load_filter import filter
-import subprocess
 import shutil
 from display_tree import display
 
@@ -34,27 +32,6 @@ def include(name):
         return False
     return True
 
-"""
-# Returns path to a temp directory
-def parserepo():
-    repo_root = Path(__file__).parent.parent
-    temp_path = repo_root / "temp"
-    temp_path.mkdir(exist_ok=True)
-    temp_repo_path = temp_path / "temp_repo"
-    temp_repo_path.mkdir(exist_ok=True)
-    return Path(temp_repo_path)
-
-# Error handling for shutil
-def handle(func, path, exc_info):
-    import stat
-    import os
-    if not os.access(path, os.W_OK):
-        os.chmod(path, stat.S_IWUSR)
-        func(path)
-    else:
-        raise
-"""
-
 #### MAIN ####
 
 # later argparse
@@ -62,23 +39,6 @@ user_input = input("Enter the root directory path or GitHub link: ")
 folder_path, temp_exists = save_directory(user_input)
 tree = create_tree(folder_path)
 display(tree)
-
-"""
-temp_exists = False
-if "github.com" in user_input:
-    temp_exists = True
-    temp_repo_path = parserepo() # received in Path format
-    subprocess.run(["git", "clone", user_input, temp_repo_path])
-
-else:
-    folder_path = Path(user_input)
-    if folder_path.exists() and folder_path.is_dir():
-        print("User input is correct")
-
-    else:
-        print("User input is invalid")
-        sys.exit(1)
-"""
 
 if temp_exists:
     shutil.rmtree(str(folder_path), onexc=handle)
