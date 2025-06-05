@@ -78,8 +78,4 @@ if temp_exists:
 else:
     tree = create_tree(Path(user_input))
 
-"""
-console = Console()
-console.print(display(tree))
-"""
 display(tree)
