@@ -3,7 +3,7 @@
 from rich.tree import Tree
 from rich.console import Console
 
-def display(tree: dict, print = None):
+def save_display(tree: dict, print = None):
     # Print the root
     if print is None:
         print = Tree(f"[bold]Root Directory")
@@ -11,11 +11,11 @@ def display(tree: dict, print = None):
     for name, subtree in tree.items():
         if isinstance(subtree, dict):
             new = print.add(f"[blue]{name}")
-            display(subtree, new)
+            save_display(subtree, new)
         else:
             print.add(name)
     return print
 
-def dis(tree: dict):
+def display(tree: dict):
     console = Console()
-    console.print(display(tree))
+    console.print(save_display(tree))
