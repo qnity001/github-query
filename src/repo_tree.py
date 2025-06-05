@@ -35,7 +35,7 @@ def include(name):
 
 # later argparse
 user_input = input("Enter the root directory path or GitHub link: ")
-folder_path, temp_exists = save_directory(user_input)
+folder_path = save_directory(user_input)
 
 tree = create_tree(folder_path)
 display(tree)

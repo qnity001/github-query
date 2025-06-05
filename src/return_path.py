@@ -27,7 +27,7 @@ def save_directory(user_input: str):
     if "github.com" in user_input:
         temp_repo_path = parserepo()
         subprocess.run(["git", "clone", user_input, temp_repo_path])
-        return temp_repo_path, True
+        return temp_repo_path
     
     else:
         folder_path = Path(user_input)
@@ -37,7 +37,7 @@ def save_directory(user_input: str):
         else:
             print("User input is invalid")
             sys.exit(1)
-    return folder_path, False
+    return folder_path
 
 def delete_link_repo(user_input: str, folder_path: Path):
     if "https://github.com/" in user_input:
