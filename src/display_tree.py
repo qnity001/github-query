@@ -15,3 +15,7 @@ def display(tree: dict, print = None):
         else:
             print.add(name)
     return print
+
+def dis(tree: dict):
+    console = Console()
+    console.print(display(tree))
