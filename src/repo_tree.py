@@ -1,5 +1,6 @@
 from pathlib import Path
 import sys
+from return_path import save_directory, handle
 from load_filter import filter
 import subprocess
 import shutil
@@ -33,6 +34,7 @@ def include(name):
         return False
     return True
 
+"""
 # Returns path to a temp directory
 def parserepo():
     repo_root = Path(__file__).parent.parent
@@ -51,12 +53,17 @@ def handle(func, path, exc_info):
         func(path)
     else:
         raise
+"""
 
 #### MAIN ####
 
 # later argparse
 user_input = input("Enter the root directory path or GitHub link: ")
+folder_path, temp_exists = save_directory(user_input)
+tree = create_tree(folder_path)
+display(tree)
 
+"""
 temp_exists = False
 if "github.com" in user_input:
     temp_exists = True
@@ -71,11 +78,7 @@ else:
     else:
         print("User input is invalid")
         sys.exit(1)
+"""
 
 if temp_exists:
-    tree = create_tree(temp_repo_path)
-    shutil.rmtree(str(temp_repo_path), onexc=handle)
-else:
-    tree = create_tree(Path(user_input))
-
-display(tree)
+    shutil.rmtree(str(folder_path), onexc=handle)
