@@ -38,3 +38,7 @@ def save_directory(user_input: str):
             print("User input is invalid")
             sys.exit(1)
     return folder_path, False
+
+def delete_link_repo(user_input: str, folder_path: Path):
+    if "https://github.com/" in user_input:
+        shutil.rmtree(str(folder_path), onexc=handle)
