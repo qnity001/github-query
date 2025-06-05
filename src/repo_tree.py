@@ -75,7 +75,9 @@ else:
 
 console = Console()
 if temp_exists:
-    console.print(display(create_tree(temp_repo_path)))
+    tree = create_tree(temp_repo_path)
+    console.print(display(tree))
     shutil.rmtree(str(temp_repo_path), onexc=handle)
 else:
-    console.print(display(create_tree(Path(user_input))))
+    tree = create_tree(Path(user_input))
+    console.print(display(tree))
