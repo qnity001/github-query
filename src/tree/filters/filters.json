@@ -8,5 +8,15 @@
         "*.pyc",
         "node_modules",
         ".*"
+    ],
+
+    "priority_files" : [
+        "README.md", "readme.md",
+        "requirements.txt",
+        "setup.py",
+        "pyproject.toml",
+        "main.py",
+        "index.js",
+        "package.json"
     ]
 }
