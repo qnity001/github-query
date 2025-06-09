@@ -4,6 +4,8 @@ from filters.load_filter import filter
 from display_tree import display
 from create_tree_json import create_json
 
+#### IMPORT FILTERS ###########
+
 filters = filter(Path(__file__).parent / "filters" / "filters.json")
 extensions = filters["extensions"]
 files = filters["files"]
