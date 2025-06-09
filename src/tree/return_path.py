@@ -6,7 +6,7 @@ import sys
 
 # Returns path to a temp directory
 def parserepo():
-    repo_root = Path(__file__).parent.parent
+    repo_root = Path(__file__).parent.parent.parent
     temp_path = repo_root / "temp"
     temp_path.mkdir(exist_ok=True)
     temp_repo_path = temp_path / "temp_repo"
