@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 from return_path import save_directory, delete_link_repo
 from load_filter import filter
@@ -39,5 +40,6 @@ folder_path = save_directory(user_input)
 
 tree = create_tree(folder_path)
 display(tree)
+json_tree = json.dumps(tree)
 
 delete_link_repo(user_input, folder_path)
