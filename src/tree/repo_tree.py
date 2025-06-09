@@ -1,8 +1,8 @@
-import json
 from pathlib import Path
 from return_path import save_directory, delete_link_repo
 from filters.load_filter import filter
 from display_tree import display
+from create_tree_json import create_json
 
 extensions, files, ignore = filter(Path(__file__).parent / "filters" / "filters.json")
 
@@ -40,6 +40,6 @@ folder_path = save_directory(user_input)
 
 tree = create_tree(folder_path)
 display(tree)
-json_tree = json.dumps(tree)
+create_json(tree)
 
 delete_link_repo(user_input, folder_path)
