@@ -10,6 +10,7 @@ filters = filter(Path(__file__).parent / "filters" / "filters.json")
 extensions = filters["extensions"]
 files = filters["files"]
 ignore = filters["ignore"]
+priority = filters["priority_files"]
 
 ##### FUNCTIONS ######
 
@@ -23,7 +24,9 @@ def create_tree(path):
             tree[element.name] = create_tree(element)
         elif element.is_file():
             if include(element.name):
-                tree[element.name] = True
+                tree[element.name] = False
+                if element.name in priority:
+                    tree[element.name] = True
     return tree
 
 # Checks for validity against filters.json
