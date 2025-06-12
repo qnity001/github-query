@@ -34,7 +34,7 @@ def create_tree(path, repo_root):
         elif element.is_file() and include(element.name):
             tree[element.name] = {
                 "type": "file",
-                "priority": element.name in priority,
+                "priority": str(element.name in priority),
                 "path": str(element.relative_to(repo_root))
             }
     return tree
