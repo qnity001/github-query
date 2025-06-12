@@ -15,18 +15,28 @@ priority = filters["priority_files"]
 ##### FUNCTIONS ######
 
 # Creates a tree and returns a dictionary
-def create_tree(path):
+def create_tree(path, repo_root):
     tree = {}
+
     for element in path.iterdir():
+        if element.name in ignore or (element.name).startswith("."):
+            continue
+        
         if element.is_dir(): # if the item is a folder
-            if element.name in ignore or (element.name).startswith("."):
-                continue
-            tree[element.name] = create_tree(element)
-        elif element.is_file():
-            if include(element.name):
-                tree[element.name] = False
-                if element.name in priority:
-                    tree[element.name] = True
+            subtree = create_tree(element, repo_root)
+            if subtree:
+                tree[element.name] = {
+                    "type": "folder", 
+                    "path": str(element.relative_to(repo_root)),
+                    "children": subtree
+                }
+
+        elif element.is_file() and include(element.name):
+            tree[element.name] = {
+                "type": "file",
+                "priority": element.name in priority,
+                "path": str(element.relative_to(repo_root))
+            }
     return tree
 
 # Checks for validity against filters.json
@@ -46,7 +56,7 @@ def include(name):
 user_input = input("Enter the root directory path or GitHub link: ")
 folder_path = save_directory(user_input)
 
-tree = create_tree(folder_path)
+tree = create_tree(folder_path, folder_path)
 display(tree)
 create_json(tree)
 
