@@ -1,8 +1,8 @@
 from pathlib import Path
-from return_path import save_directory, delete_link_repo
-from filters.load_filter import filter
-from display_tree import display
-from create_tree_json import create_json
+from src.tree.filters.load_filter import filter
+from src.tree.display_tree import display
+from src.tree.create_tree_json import create_json
+from src.config import get_repo_path
 
 #### IMPORT FILTERS ###########
 
@@ -50,14 +50,8 @@ def include(name):
         return False
     return True
 
-#### MAIN ####
-
-# later argparse
-user_input = input("Enter the root directory path or GitHub link: ")
-folder_path = save_directory(user_input)
-
-tree = create_tree(folder_path, folder_path)
-display(tree)
-create_json(tree)
-
-delete_link_repo(user_input, folder_path)
+def run():
+    folder_path = get_repo_path()
+    tree = create_tree(folder_path, folder_path)
+    display(tree)
+    create_json(tree)
