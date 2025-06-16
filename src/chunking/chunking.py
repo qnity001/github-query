@@ -30,8 +30,10 @@ def process_files(files: list, root, priority: bool):
             tokens = tokenizer.encode(content, truncation = False)
             if len(tokens) < 8192 and priority:
                 test_chunks.append(content)
-            if len(tokens) < 3072 and not priority:
+            elif len(tokens) < 4096 and not priority:
                 test_chunks.append(content)
+            else:
+                print(f"{file_path} = Chunking required")
     return test_chunks
 
 def run():
