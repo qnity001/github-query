@@ -28,7 +28,9 @@ def process_files(files: list, root, priority: bool):
         with open(path, "r", encoding="utf-8") as fileread:
             content = fileread.read()
             tokens = tokenizer.encode(content, truncation = False)
-            print(f"{path} = {len(tokens)}")
+            if len(tokens) < 8192 and priority:
+                test_chunks.append(content)
+    print(test_chunks)
 
 def run():
     repo_root = Path(get_repo_path())
