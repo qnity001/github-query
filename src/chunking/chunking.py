@@ -30,8 +30,10 @@ def process_files(files: list, root, priority: bool):
             tokens = tokenizer.encode(content, truncation = False)
             if len(tokens) < 8192 and priority:
                 test_chunks.append(content)
+                print(f"{file_path} = Valid Input Appended")
             elif len(tokens) < 4096 and not priority:
                 test_chunks.append(content)
+                print(f"{file_path} = Valid Input Appended")
             else:
                 print(f"{file_path} = Chunking required")
     return test_chunks
@@ -42,5 +44,5 @@ def run():
     split_files(tree)
     print(priority)
     print(non_priority)
-    print(process_files(priority, repo_root, True))
-    print(process_files(non_priority, repo_root, False))
+    process_files(priority, repo_root, True)
+    process_files(non_priority, repo_root, False)
