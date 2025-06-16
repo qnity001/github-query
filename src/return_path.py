@@ -3,14 +3,13 @@ from pathlib import Path
 import subprocess
 import shutil
 import sys
+import tempfile
 
 # Returns path to a temp directory
 def parserepo():
     repo_root = Path(__file__).parent.parent.parent
     temp_path = repo_root / "temp"
-    temp_path.mkdir(exist_ok=True)
-    temp_repo_path = temp_path / "temp_repo"
-    temp_repo_path.mkdir(exist_ok=True)
+    temp_repo_path = tempfile.mkdtemp(dir = temp_path)
     return Path(temp_repo_path)
 
 # Error handling for shutil
