@@ -35,6 +35,7 @@
         "pyproject.toml",
         "main.py",
         "index.js",
-        "package.json"
+        "package.json",
+        "manual.txt"
     ]
 }
