@@ -5,7 +5,6 @@ from transformers import AutoTokenizer
 
 priority = []
 non_priority = []
-test_chunks = []
 tokenizer = AutoTokenizer.from_pretrained("deepseek-ai/deepseek-coder-6.7b-instruct")
 
 def get_tree():
@@ -23,6 +22,7 @@ def split_files(tree: dict):
                 non_priority.append(Path(meta["path"]))
 
 def process_files(files: list, root, priority: bool):
+    test_chunks = []
     for file_path in files:
         path = root / file_path
         with open(path, "r", encoding="utf-8") as fileread:
@@ -30,7 +30,7 @@ def process_files(files: list, root, priority: bool):
             tokens = tokenizer.encode(content, truncation = False)
             if len(tokens) < 8192 and priority:
                 test_chunks.append(content)
-    print(test_chunks)
+    return test_chunks
 
 def run():
     repo_root = Path(get_repo_path())
