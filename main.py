@@ -11,4 +11,4 @@ with open("data/outputs/meta.json", "w") as file:
     json.dump({"folder_path": str(folder_path)}, file)
 
 repo_tree.run()
-#chunking.run()
+chunking.run()
