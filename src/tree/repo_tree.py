@@ -53,5 +53,5 @@ def include(name):
 def run():
     folder_path = get_repo_path()
     tree = create_tree(folder_path, folder_path)
-    display(tree)
+    #display(tree)
     create_json(tree)
