@@ -21,6 +21,10 @@ def split_files(tree: dict):
             else:
                 non_priority.append(Path(meta["path"]))
 
+def chunker(content: str, path):
+    
+    return
+
 def process_files(files: list, root, priority: bool):
     test_chunks = []
     for file_path in files:
@@ -36,6 +40,7 @@ def process_files(files: list, root, priority: bool):
                 print(f"{file_path} = Valid Input Appended")
             else:
                 print(f"{file_path} = Chunking required")
+                test_chunks = chunker(content, file_path)
     return test_chunks
 
 def run():
