@@ -22,7 +22,7 @@ def split_files(tree: dict):
             else:
                 non_priority.append(Path(meta["path"]))
 
-def process_files(files: list, root):
+def process_files(files: list, root, priority: bool):
     for file_path in files:
         path = root / file_path
         with open(path, "r", encoding="utf-8") as fileread:
@@ -36,4 +36,4 @@ def run():
     split_files(tree)
     print(priority)
     print(non_priority)
-    process_files(priority, repo_root)
+    process_files(priority, repo_root, True)
