@@ -8,3 +8,7 @@ def get_repo_path():
     with open(data_dir / "outputs/meta.json", "r") as file:
         meta = json.load(file)
     return Path(meta["folder_path"])
+
+priority_token_limit = 8192
+non_priority_token_limit = 4096
+chunk_token_limit = 4096
