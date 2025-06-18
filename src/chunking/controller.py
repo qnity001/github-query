@@ -1,4 +1,3 @@
-from src.config import get_repo_path
 from pathlib import Path
 import json
 
@@ -20,9 +19,7 @@ def split_files(tree: dict):
                 splitter[1].append(Path(meta["path"]))
     return splitter 
 
-if __name__ == "__main__":
-    repo_root = Path(get_repo_path())
+def return_list():
     tree = get_tree()
-    split_files(tree)
-    priority, non_priority = split_files()
+    priority, non_priority = split_files(tree)
     
