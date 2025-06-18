@@ -21,5 +21,5 @@ def split_files(tree: dict):
 
 def return_list():
     tree = get_tree()
-    priority, non_priority = split_files(tree)
-    
+    files = split_files(tree)
+    return files
