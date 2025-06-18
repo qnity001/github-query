@@ -9,14 +9,14 @@ def get_tree():
 # to two different lists
 def split_files(tree: dict):
     splitter = [], []
-    for name, meta in tree.items():
-        if meta["type"] == "folder":
-            split_files(meta["children"])
-        elif meta["type"] == "file":
-            if meta["priority"] == "True":
-                splitter[0].append(Path(meta["path"]))
+    for name, meta_data in tree.items():
+        if meta_data["type"] == "folder":
+            split_files(meta_data["children"])
+        elif meta_data["type"] == "file":
+            if meta_data["priority"] == "True":
+                splitter[0].append(Path(meta_data["path"]))
             else:
-                splitter[1].append(Path(meta["path"]))
+                splitter[1].append(Path(meta_data["path"]))
     return splitter 
 
 def return_list():
