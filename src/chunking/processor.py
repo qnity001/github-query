@@ -14,10 +14,10 @@ def read_and_chunk(file_list: list, priority: bool, repo_root):
         with open(path, "r", encoding="utf-8") as file:
             content = file.read()
         chunk = {
+            "token_count": len(tokenizer.encode(content)),
             "chunk_id": f"{file_path}::{chunk_number + 1}",
             "file_path": str(path),
             "content": content,
-            "token_count": len(tokenizer.encode(content)),
             "priority": priority
         }
         with open("data/outputs/chunks.jsonl", "a", encoding = "utf-8") as file:
