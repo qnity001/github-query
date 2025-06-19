@@ -14,15 +14,15 @@ def read_and_chunk(file_list: list, priority: bool, repo_root):
             content = file.read()
         chunk = {
             "chunk_id": f"{file_path}::{chunk_number + 1}",
-            "file_path": path,
+            "file_path": str(path),
             "content": content,
             "token_count": len(tokenizer.encode(content)),
             "priority": priority
         }
-        print(chunk)
+        with open("data/outputs/chunks.jsonl", "a", encoding = "utf-8") as file:
+            file.write(json.dumps(chunk) + "\n") 
     
 def run():
     repo_root = get_repo_path()
     files = return_list()
-    print(files)
-    print(repo_root)
+    read_and_chunk(files[1], False, repo_root)
