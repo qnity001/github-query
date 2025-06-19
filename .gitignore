@@ -1,5 +1,6 @@
 # Ignore virtual environment
 .nic-delhi/
+.venv/
 
 __pycache__/
 
