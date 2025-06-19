@@ -5,6 +5,7 @@ from transformers import AutoTokenizer
 from src.config import get_repo_path
 
 tokenizer = AutoTokenizer.from_pretrained("deepseek-ai/deepseek-coder-6.7b-instruct")
+open("data/outputs/chunks.jsonl", "w").close()
 
 def read_and_chunk(file_list: list, priority: bool, repo_root):
     for file_path in file_list:
