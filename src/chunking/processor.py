@@ -26,4 +26,5 @@ def read_and_chunk(file_list: list, priority: bool, repo_root):
 def run():
     repo_root = get_repo_path()
     files = return_list()
+    read_and_chunk(files[0], True, repo_root)
     read_and_chunk(files[1], False, repo_root)
