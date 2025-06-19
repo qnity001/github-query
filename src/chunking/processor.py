@@ -2,7 +2,7 @@ from pathlib import Path
 from src.chunking.controller import return_list
 import json
 from transformers import AutoTokenizer
-#from src.config import get_repo_path
+from src.config import get_repo_path
 
 tokenizer = AutoTokenizer.from_pretrained("deepseek-ai/deepseek-coder-6.7b-instruct")
 
@@ -22,6 +22,7 @@ def read_and_chunk(file_list: list, priority: bool, repo_root):
         print(chunk)
     
 def run():
-    #repo_root = get_repo_path()
+    repo_root = get_repo_path()
     files = return_list()
     print(files)
+    print(repo_root)
