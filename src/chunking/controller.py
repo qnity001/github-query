@@ -7,8 +7,8 @@ def get_tree():
     
 # Split the directory on the basis of their priority and save their paths
 # to two different lists
+splitter = [], []
 def split_files(tree: dict):
-    splitter = [], []
     for name, meta_data in tree.items():
         if meta_data["type"] == "folder":
             split_files(meta_data["children"])
