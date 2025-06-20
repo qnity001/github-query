@@ -5,7 +5,7 @@ from transformers import AutoTokenizer
 from src.config import get_repo_path
 
 tokenizer = AutoTokenizer.from_pretrained("deepseek-ai/deepseek-coder-6.7b-instruct")
-open("data/outputs/chunks.jsonl", "w").close()
+chunks = []
 
 def read_and_chunk(file_list: list, priority: bool, repo_root):
     for file_path in file_list:
@@ -20,8 +20,10 @@ def read_and_chunk(file_list: list, priority: bool, repo_root):
             "content": content,
             "priority": priority
         }
-        with open("data/outputs/chunks.jsonl", "a", encoding = "utf-8") as file:
-            file.write(json.dumps(chunk) + "\n") 
+        chunks.append(chunk)
+    json_chunks = json.dumps(chunks, indent = 4)
+    with open("data/outputs/chunks.json", "w") as file:
+        file.write(json_chunks)
     
 def run():
     repo_root = get_repo_path()
