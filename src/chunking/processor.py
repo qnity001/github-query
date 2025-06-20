@@ -11,7 +11,7 @@ def read_and_chunk(file_list: list, priority: bool, repo_root):
     for file_path in file_list:
         chunk_number = -1
         path = repo_root / file_path
-        with open(path, "r", encoding="utf-8") as file:
+        with open(path, "r") as file:
             content = file.read()
         chunk = {
             "token_count": len(tokenizer.encode(content)),
