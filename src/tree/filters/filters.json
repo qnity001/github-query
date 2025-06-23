@@ -36,12 +36,12 @@
         "__pycache__",
         "*.pyc",
         "node_modules",
-        ".*"
+        ".*",
+        "requirements.txt"
     ],
 
     "priority_files" : [
         "README.md", "readme.md",
-        "requirements.txt",
         "setup.py",
         "pyproject.toml",
         "main.py",
