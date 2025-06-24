@@ -6,7 +6,6 @@ from sentence_transformers import SentenceTransformer
 import faiss
 import numpy
 from sklearn.preprocessing import normalize
-from src.chunking.controller import get_names
 
 model = SentenceTransformer("all-MiniLM-L6-v2")
 
@@ -14,7 +13,12 @@ def get_chunks():
     chunks_path = "data/outputs/chunks.json"
     with open(chunks_path) as file:
         return json.load(file)
-    
+
+def get_names():
+    names_path = "data/outputs/name_chunks.json"
+    with open(names_path) as file:
+        return json.load(file)
+
 def embed_chunks():
     chunks = get_chunks()
     texts = [chunk["content"] for chunk in chunks]
@@ -22,8 +26,8 @@ def embed_chunks():
     faiss.write_index(index, "data/outputs/faiss_chunks.index")
 
 def embed_names():
-    names = get_names
-    texts = [name for name in names]
+    names = get_names()
+    texts = [name["name"] for name in names]
     index = store_chunks(texts)
     faiss.write_index(index, "data/outputs/faiss_names.index")
 
@@ -36,3 +40,7 @@ def store_chunks(texts):
     index = faiss.IndexFlatIP(dimension)
     index.add(normalized_vectors)
     return index
+
+def run():
+    embed_chunks()
+    embed_names()
