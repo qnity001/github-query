@@ -19,11 +19,19 @@ def split_files(tree: dict):
                 splitter[1].append(Path(meta_data["path"]))
     return splitter 
 
-def get_names():
+def return_names():
+    names = []
     files = return_list()
-    all_files = files[0] + files[1]
-    names = [path.name for path in all_files]
-    return names
+    all_files = list(set(files[0] + files[1]))
+    for path in all_files:
+        name_chunk = {
+            "name" : path.name,
+            "path" : str(path)
+        }    
+        names.append(name_chunk)
+    json_chunks = json.dumps(names, indent = 4)
+    with open("data/outputs/name_chunks.json", "w") as file:
+        file.write(json_chunks)
 
 def return_list():
     tree = get_tree()

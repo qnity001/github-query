@@ -1,5 +1,5 @@
 from pathlib import Path
-from src.chunking.controller import return_list
+from src.chunking.controller import return_list, return_names
 import json
 from transformers import AutoTokenizer
 from src.config import get_repo_path
@@ -24,7 +24,7 @@ def read_and_chunk(file_list: list, priority: bool, repo_root):
             chunk = {
                 "token_count": len(tokenizer.encode(content)),
                 "chunk_id": f"{file_path}::{chunk_number + 1}",
-                "file_path": str(path),
+                "file_path": str(file_path),
                 "content": content,
                 "priority": priority
             }
@@ -58,3 +58,4 @@ def run():
     files = return_list()
     read_and_chunk(files[0], True, repo_root)
     read_and_chunk(files[1], False, repo_root)
+    return_names()
