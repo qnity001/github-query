@@ -19,6 +19,12 @@ def split_files(tree: dict):
                 splitter[1].append(Path(meta_data["path"]))
     return splitter 
 
+def get_names():
+    files = return_list()
+    all_files = files[0] + files[1]
+    names = [path.name for path in all_files]
+    return names
+
 def return_list():
     tree = get_tree()
     files = split_files(tree)
