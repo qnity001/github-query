@@ -1,53 +1,116 @@
-from src.config import get_repo_path
-from pathlib import Path
-import json
+from tree_sitter_language_pack import get_parser
+from tree_sitter import Query
 from transformers import AutoTokenizer
 
-priority = []
-non_priority = []
 tokenizer = AutoTokenizer.from_pretrained("deepseek-ai/deepseek-coder-6.7b-instruct")
 
-def get_tree():
-    with open("data/outputs/repo_tree.json", "r") as fileread:
-        return json.load(fileread)
-    
-def split_files(tree: dict):
-    for name, meta in tree.items():
-        if meta["type"] == "folder":
-            split_files(meta["children"])
-        elif meta["type"] == "file":
-            if meta["priority"] == "True":
-                priority.append(Path(meta["path"]))
-            else:
-                non_priority.append(Path(meta["path"]))
+language_extensions = {
+    ".py" : "python", 
+    ".php" : "php",
+    ".js" : "javascript",
+    ".html" : "html",
+    ".css" : "css"
+}
 
-def chunker(content: str, path):
-    
-    return
+php_query_top_level = """
+(
+  (comment)* @comment
+  (class_declaration) @class
+) @class_chunk
 
-def process_files(files: list, root, priority: bool):
-    test_chunks = []
-    for file_path in files:
-        path = root / file_path
-        with open(path, "r", encoding="utf-8") as fileread:
-            content = fileread.read()
-            tokens = tokenizer.encode(content, truncation = False)
-            if len(tokens) < 8192 and priority:
-                test_chunks.append(content)
-                print(f"{file_path} = Valid Input Appended")
-            elif len(tokens) < 4096 and not priority:
-                test_chunks.append(content)
-                print(f"{file_path} = Valid Input Appended")
-            else:
-                print(f"{file_path} = Chunking required")
-                test_chunks = chunker(content, file_path)
-    return test_chunks
+(
+  (comment)* @comment
+  (trait_declaration) @trait
+) @trait_chunk
 
-def run():
-    repo_root = Path(get_repo_path())
-    tree = get_tree()
-    split_files(tree)
-    print(priority)
-    print(non_priority)
-    process_files(priority, repo_root, True)
-    process_files(non_priority, repo_root, False)
+(
+  (comment)* @comment
+  (interface_declaration) @interface
+) @interface_chunk
+
+(
+  (comment)* @comment
+  (function_definition) @global_function
+  (#not-inside? class_declaration)
+  (#not-inside? trait_declaration)
+  (#not-inside? interface_declaration)
+) @global_function_chunk
+"""
+
+php_query_function = '''
+(
+  (comment)* @comment
+  (expression_statement) @expression
+) @expression_chunk
+
+(
+  (comment)* @comment
+  (return_statement) @return
+) @return_chunk
+
+(
+  (comment)* @comment
+  (if_statement) @if
+) @if_chunk
+
+(
+  (comment)* @comment
+  (switch_statement) @switch
+) @switch_chunk
+
+(
+  (comment)* @comment
+  (while_statement) @while
+) @while_chunk
+
+(
+  (comment)* @comment
+  (for_statement) @for
+) @for_chunk
+
+(
+  (comment)* @comment
+  (foreach_statement) @foreach
+) @foreach_chunk
+
+(
+  (comment)* @comment
+  (function_definition) @nested_function
+) @nested_function_chunk
+'''
+
+php_query_not_function = '''
+(
+  (comment)* @comment
+  (method_declaration) @method
+) @method_chunk
+
+(
+  (comment)* @comment
+  (property_declaration) @property
+) @property_chunk
+
+(
+  (comment)* @comment
+  (const_declaration) @constant
+) @constant_chunk
+'''
+
+def find_parser(extension):
+    language = language_extensions[extension]
+    if language:
+        return get_parser(language)
+    return None
+
+def return_chunks(content, node):
+    parser = find_parser(".php")
+    tree = parser.parse(content)
+    root = tree.root_node
+    if node == None:
+        query = Query(parser.language, php_query_top_level)
+    elif node == "function":
+        query = Query(parser.language, php_query_function)
+    else:
+        query = Query(parser.language, php_query_not_function)
+    captures = query.captures(root)
+    return captures
