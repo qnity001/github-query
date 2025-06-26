@@ -11,57 +11,72 @@ code_block = ""
 def token_count(text: str):
     return len(tokenizer.encode(text))
 
+def create_chunk(content, path, chunk_count, priority):
+    chunk = {
+        "token_count": token_count(content),
+        "chunk_id": f"{path}:{chunk_count}",
+        "file_path": str(path),
+        "content": content,
+        "priority": priority
+    }
+    chunks.append(chunk)
+
 def read_and_chunk(file_list: list, priority: bool, repo_root):
     for file_path in file_list:
         path = repo_root / file_path
         with open(path, "r") as file:
             content = file.read()
         
-        # If the tokens are less than 1000, create a chunk
-        if token_count(content) < 1000:
-            chunk = {
-                "token_count": token_count(content),
-                "chunk_id": f"{file_path}:0",
-                "file_path": str(file_path),
-                "content": content,
-                "priority": priority
-            }
-            chunks.append(chunk)
+        chunk_count = 0
+
+        # If entire file is < 1000 tokens, create a chunk
+        if token_count(content) <= 1000:
+            create_chunk(content, file_path, chunk_count, priority)
+            continue
         
-        else:
-            print("High token count. Chunking...")
-            with open(path, "rb") as file:
-                content = file.read()
+        # Per file
+        with open(path, "rb") as file:
+            content = file.read()
             captures = return_chunks(content, None)
-            #create_chunk(captures, path, priority)
-            for capture_name, nodes in captures.items():
+
+            accumulated = ""
+            for nodes in captures.values():
                 for node in nodes:
                     start, end = node.start_byte, node.end_byte
                     code_block = content[start:end].decode("utf-8", errors="ignore")
+
+                    # Check for a node if its less than 1000 tokens
                     if token_count(code_block) < 1000:
-                        chunk = {
-                            "token_count": token_count(code_block),
-                            "chunk_id": f"{file_path}:{1}",
-                            "file_path": str(path),
-                            "content": code_block,
-                            "priority": priority
-                        }
-                        chunks.append(chunk)
+                        if token_count(code_block) + token_count(accumulated) > 1000:
+                            create_chunk(accumulated, path, chunk_count, priority)
+                            chunk_count += 1
+                            accumulated = ""
+                        accumulated += code_block + "\n"
+                        continue
                     
-                    else:
-                        captures_mini = return_chunks(content[start:end], node.type)
-                        for capture_name, nodes in captures_mini.items():
-                            for node in nodes:
-                                start, end = node.start_byte, node.end_byte
-                                code_block = content[start:end].decode("utf-8", errors="ignore")
-                                chunk = {
-                                    "token_count": token_count(code_block),
-                                    "chunk_id": f"{file_path}:{1}",
-                                    "file_path": str(path),
-                                    "content": code_block,
-                                    "priority": priority
-                                }
-                                chunks.append(chunk)
+                    # Code block is more than 1000 chunks
+                    mini_content = content[start:end]
+                    accumulated_mini = ""
+                    captures_mini = return_chunks(mini_content, node.type)
+
+                    for nodes in captures_mini.values():
+                        for node in nodes:
+                            start, end = node.start_byte, node.end_byte
+                            code_block = mini_content[start:end].decode("utf-8", errors="ignore")
+
+                            if token_count(code_block) + token_count(accumulated_mini) > 1000:
+                                create_chunk(accumulated_mini, path, chunk_count, priority)
+                                chunk_count += 1
+                                accumulated_mini = ""
+
+                            accumulated_mini += code_block + "\n"
+                            
+                    if accumulated_mini.strip():
+                        create_chunk(accumulated_mini, path, chunk_count, priority)
+                        chunk_count += 1
+
+            if accumulated.strip():
+                create_chunk(accumulated, path, chunk_count, priority)
 
 
 def create_chunk_json():
