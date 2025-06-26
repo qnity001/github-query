@@ -28,4 +28,4 @@ pipeline = Pipeline([
 ])
 
 pipeline.fit(queries, labels)
-joblib.dump(pipeline, "../../data/outputs/intents.joblib")
+joblib.dump(pipeline, "intents.joblib")
