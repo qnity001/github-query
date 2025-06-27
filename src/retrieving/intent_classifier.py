@@ -6,21 +6,54 @@ import joblib
 
 queries = [
     "Where are all the PHP files located?",
+    "Find all Python files in the utils folder.",
+    "List every file with a .js extension.",
+    "Show me where login.php is located.",
+    "Is there a file named database.py?",
+    "Locate retriever.py for me.",
+    "How many HTML files are in the project?",
+    "Where is app.module.ts defined?",
+
     "Explain what the function does.",
     "Explain what the file does.",
-    "What is the architecture of the project?", 
+    "What is the architecture of the project?",
     "Where is the tree being created?",
-    "What is the role of retriever.py?"
+    "What is the role of retriever.py?",
+    "Help me understand the flow of the project.",
+    "Explain how main.py interacts with other files.",
+    "Describe how the modules connect.",
+    "Walk me through the logic inside retriever.py.",
+    "What happens when the project starts?",
+    "How does data flow between these files?",
+    "Explain the control flow of this project.",
+    "How do the services interact in the codebase?"
 ]
 
 labels = [
     "file_search",
-    "semantic_search", 
-    "file_search", 
+    "file_search",
+    "file_search",
+    "file_search",
+    "file_search",
+    "file_search",
+    "file_search",
+    "file_search",
+
     "semantic_search",
     "semantic_search",
-    "file_search"
+    "semantic_search",
+    "semantic_search",
+    "semantic_search",
+    "semantic_search",
+    "semantic_search",
+    "semantic_search",
+    "semantic_search",
+    "semantic_search",
+    "semantic_search",
+    "semantic_search",
+    "semantic_search"
 ]
+
 
 pipeline = Pipeline([
     ('tfidf', TfidfVectorizer(ngram_range=(1,2))),
@@ -28,4 +61,5 @@ pipeline = Pipeline([
 ])
 
 pipeline.fit(queries, labels)
-joblib.dump(pipeline, "intents.joblib")
+joblib.dump(pipeline, "../../data/intents.joblib")
+print("Classifier trained")
