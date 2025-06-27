@@ -7,7 +7,7 @@ import faiss
 import numpy
 from sklearn.preprocessing import normalize
 
-model = SentenceTransformer("all-MiniLM-L6-v2")
+model = SentenceTransformer("BAAI/bge-code-v1")
 
 def get_chunks():
     chunks_path = "data/outputs/chunks.json"

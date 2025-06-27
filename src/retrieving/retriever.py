@@ -5,7 +5,7 @@ import numpy
 import joblib
 import re
 
-model = SentenceTransformer("all-MiniLM-L6-v2") 
+model = SentenceTransformer("BAAI/bge-code-v1") 
 
 def extract_filenames(query):
     EXTENSIONS = ["py", "js", "php", "java", "ts", "html", "css", "cpp", "c"]
@@ -57,7 +57,6 @@ def search_chunks(query_vector):
     similarities = 1 - D[0]
 
     for index, sim in zip(I[0], similarities):
-        print(sim)
         if sim >= threshold:
             chunk = chunks[index]
             paths.append(chunk["file_path"])
@@ -68,7 +67,12 @@ def run():
         user_query = input("Ask your query from codebase: ")
         if user_query == "":
             break
-        intent = predict_intent(user_query)
+        filenames = extract_filenames(user_query)
+        intent = ""
+        if user_query.strip().lower() in filenames:
+            intent = "file_search"
+        else:
+            intent = predict_intent(user_query)
         print(intent)
         query_vector = model.encode([user_query], normalize_embeddings = True)
 
@@ -84,7 +88,7 @@ def run():
                         new_paths = search_names(query_vector)
                         paths.extend(new_paths)
         else:
-            print("No file name match found. Running semantic search..")
+            print("Running semantic search..")
             paths = search_chunks(query_vector)
         for path in paths:
             print(path)
