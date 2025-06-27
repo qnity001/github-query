@@ -13,6 +13,7 @@ queries = [
     "Locate retriever.py for me.",
     "How many HTML files are in the project?",
     "Where is app.module.ts defined?",
+    "Where is create_tree.py?"
 
     "Explain what the function does.",
     "Explain what the file does.",
