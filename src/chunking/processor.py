@@ -14,8 +14,10 @@ def token_count(text: str):
 def create_chunk(content, path, chunk_count, priority):
     chunk = {
         "token_count": token_count(content),
-        "chunk_id": f"{path}:{chunk_count}",
+        "file_name" : path.name,
+        "file_extension": path.suffix,
         "file_path": str(path),
+        "chunk_id": f"{path}:{chunk_count}",
         "content": content,
         "priority": priority
     }
@@ -48,7 +50,7 @@ def read_and_chunk(file_list: list, priority: bool, repo_root):
                     # Check for a node if its less than 1000 tokens
                     if token_count(code_block) < 1000:
                         if token_count(code_block) + token_count(accumulated) > 1000:
-                            create_chunk(accumulated, path, chunk_count, priority)
+                            create_chunk(accumulated, file_path, chunk_count, priority)
                             chunk_count += 1
                             accumulated = ""
                         accumulated += code_block + "\n"
@@ -65,18 +67,18 @@ def read_and_chunk(file_list: list, priority: bool, repo_root):
                             code_block = mini_content[start:end].decode("utf-8", errors="ignore")
 
                             if token_count(code_block) + token_count(accumulated_mini) > 1000:
-                                create_chunk(accumulated_mini, path, chunk_count, priority)
+                                create_chunk(accumulated_mini, file_path, chunk_count, priority)
                                 chunk_count += 1
                                 accumulated_mini = ""
 
                             accumulated_mini += code_block + "\n"
                             
                     if accumulated_mini.strip():
-                        create_chunk(accumulated_mini, path, chunk_count, priority)
+                        create_chunk(accumulated_mini, file_path, chunk_count, priority)
                         chunk_count += 1
 
             if accumulated.strip():
-                create_chunk(accumulated, path, chunk_count, priority)
+                create_chunk(accumulated, file_path, chunk_count, priority)
 
 
 def create_chunk_json():
