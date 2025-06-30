@@ -11,7 +11,7 @@ Instructions:
 - Read the user's query carefully.
 - If the query contains a mention of a filename (e.g., "my_script.py", "src/utils.js", "README.md", "config.xml", "main.cpp", "filter.php"), identify the intent as "file_search".
 - For all other queries that do not specify a filename, identify the intent as "semantic_search".
-- Respond with only the intent category name (either "file_search" or "semantic_search"). Do not include any other text or explanation.
+- Output only one word:  either "file_search" or "semantic_search". Do not explain, do not add anything else. Only "file_search" or "semantic_search".
 
 Examples:
 - Query: "Find the function calculate_total in orders.py"
@@ -25,6 +25,8 @@ Response: semantic_search
 - Query: "Look for user_authentication.go"
 Response: file_search
 - Query: "Find code for user authentication"
+Response: semantic_search
+- Query: "Explain how the code is being retrieved."
 Response: semantic_search
 
 User Query: "{query}"
@@ -42,8 +44,9 @@ def predict_intent_llm(user_query):
     )
 
     intent = response["message"]["content"].strip().lower()
-
-    if intent not in ["file_search", "semantic_search"]:
-        intent = "semantic_search"
-    
-    return intent
+    if "file_search" in intent:
+        return "file_search"
+    elif "semantic_search" in intent:
+        return "semantic_search"
+    else:
+        return "semantic_search"
