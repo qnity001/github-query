@@ -1,9 +1,10 @@
 import faiss
 import json
-import re
-import joblib
-import numpy
 from sentence_transformers import SentenceTransformer
+import numpy
+import joblib
+import re
+from src.retrieving.llm_classifier import predict_intent_llm
 
 model = SentenceTransformer("BAAI/bge-code-v1")
 
@@ -14,8 +15,11 @@ def extract_filenames(query):
     return re.findall(pattern, query.lower())
 
 def predict_intent(user_query):
-    pipeline = joblib.load("data/intents.joblib")
-    return pipeline.predict([user_query])[0]
+    filenames = extract_filenames(user_query)
+    if user_query.strip().lower() in filenames:
+        return "file_search"
+    else:
+        return predict_intent_llm(user_query)
 
 def get_chunks():
     with open("data/outputs/chunks.json") as file:
@@ -25,7 +29,7 @@ def get_names():
     with open("data/outputs/name_chunks.json") as file:
         return json.load(file)
 
-def search_names(query_vector, threshold=0.75, k=6):
+def search_names(query_vector, threshold=0.75, k=10):
     paths = []
     names = get_names()
     index = faiss.read_index("data/outputs/faiss_names.index")
@@ -39,7 +43,7 @@ def search_names(query_vector, threshold=0.75, k=6):
 
     return paths
 
-def search_chunks(query_vector, threshold=0.5, k=6):
+def search_chunks(query_vector, threshold=0.5, k=10):
     paths = []
     chunks = get_chunks()
     index = faiss.read_index("data/outputs/faiss_chunks.index")

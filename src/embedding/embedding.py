@@ -26,7 +26,7 @@ def embed_chunks():
 
 def embed_names():
     names = get_names()
-    texts = [name["name"] for name in names]
+    texts = [name["name"].lower() for name in names]
     index = store_chunks(texts)
     faiss.write_index(index, "data/outputs/faiss_names.index")
 
