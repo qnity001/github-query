@@ -5,7 +5,6 @@ import json
 from sentence_transformers import SentenceTransformer
 import faiss
 import numpy
-from sklearn.preprocessing import normalize
 
 model = SentenceTransformer("BAAI/bge-code-v1")
 
@@ -32,13 +31,10 @@ def embed_names():
     faiss.write_index(index, "data/outputs/faiss_names.index")
 
 def store_chunks(texts):
-    vectors = model.encode(texts, show_progress_bar = True) # Vectors from all the chunks
-    normalized_vectors = normalize(numpy.array(vectors), axis = 1)
-    
-    # Store in FAISS Database as index
-    dimension = normalized_vectors.shape[1]
+    embeddings = model.encode(texts, normalize_embeddings=True, show_progress_bar=True)
+    dimension = embeddings.shape[1]
     index = faiss.IndexFlatIP(dimension)
-    index.add(normalized_vectors)
+    index.add(numpy.array(embeddings))
     return index
 
 def run():
