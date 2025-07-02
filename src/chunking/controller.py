@@ -26,7 +26,7 @@ def return_names():
     for path in all_files:
         name_chunk = {
             "name" : path.name,
-            "path" : str(path)
+            "file_path" : str(path)
         }    
         names.append(name_chunk)
     json_chunks = json.dumps(names, indent = 4)
