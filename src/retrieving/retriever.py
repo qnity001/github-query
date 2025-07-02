@@ -31,6 +31,7 @@ def get_names():
 
 def search_names(query_vector, user_query, threshold=0.5, k=15):
     paths = []
+    results = []
     names = get_names()
     index = faiss.read_index("data/outputs/faiss_names.index")
 
@@ -50,11 +51,25 @@ def search_names(query_vector, user_query, threshold=0.5, k=15):
     candidates = sorted(candidates, key=lambda x: x["rerank_score"], reverse=True)
     top_candidates = candidates[:3]
 
-    paths = [chunk["path"] for chunk in top_candidates]
-    return paths
+    paths = [chunk["file_path"] for chunk in top_candidates]
+    results = get_chunk_content(paths)
+    return results
+
+def get_chunk_content(paths):
+    chunks = get_chunks()
+    results = []
+    seen_chunks = set()
+    for path in paths:
+        for chunk in chunks:
+            if chunk["file_path"] == path:
+                chunk_id = chunk["chunk_id"]
+                if chunk_id not in seen_chunks:
+                    seen_chunks.add(chunk_id)
+                    results.append(chunk["content"])
+    return results
 
 def search_chunks(query_vector, user_query, threshold=0.5, k=15):
-    paths = []
+    results = []
     chunks = get_chunks()
     index = faiss.read_index("data/outputs/faiss_chunks.index")
 
@@ -74,14 +89,19 @@ def search_chunks(query_vector, user_query, threshold=0.5, k=15):
     candidates = sorted(candidates, key=lambda x: x["rerank_score"], reverse=True)
     top_candidates = candidates[:3]
 
-    paths = [chunk["file_path"] for chunk in top_candidates]
-    return paths
+    seen_chunks = set()
+    for chunk in top_candidates:
+        if chunk["chunk_id"] not in seen_chunks:
+            seen_chunks.add(chunk["chunk_id"])
+            results.append(chunk["content"])
+
+    return results
 
 def run_search(user_query):
     intent = predict_intent(user_query)
     print(f"Intent: {intent}")
     query_vector = model.encode([user_query], normalize_embeddings=True)
-    paths = []
+    results = []
 
     if intent == "file_search":
         filenames = extract_filenames(user_query)
@@ -91,33 +111,23 @@ def run_search(user_query):
             print(f"Detected filenames: {filenames}")
 
             for file in filenames:
-                exact_matches = [n["path"] for n in names if file in n["path"]]
-                paths.extend(exact_matches)
+                exact_matches = [n["file_path"] for n in names if file in n["file_path"]]
+                results.extend(exact_matches)
 
-            if not paths:
+            if not results:
                 print("No exact matches found. Running fuzzy name search...")
-                paths = search_names(query_vector, user_query)
+                results = search_names(query_vector, user_query)
 
         else:
             print("No filenames detected. Running fuzzy name search...")
-            paths = search_names(query_vector, user_query)
+            results = search_names(query_vector, user_query)
 
     else:
         print("Running semantic search...")
-        paths = search_chunks(query_vector, user_query)
+        results = search_chunks(query_vector, user_query)
 
-    return paths
+    return results
 
-def run():
-    while True:
-        user_query = input("Ask your query from codebase: ")
-        if not user_query.strip():
-            break
-
-        paths = list(set(run_search(user_query)))
-        if paths:
-            print("Results:")
-            for path in paths:
-                print(path)
-        else:
-            print("No relevant results found.")
+def run(user_query):
+    results = run_search(user_query)
+    return results

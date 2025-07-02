@@ -1,12 +1,12 @@
+#"""
 from src.return_path import save_directory
 from src.tree import repo_tree
 from src.chunking import processor
 from src.embedding import embedding
-from src.retrieving import retriever
+from src.llm_query import chatbot
 import json
 import sys
 import os
-from pathlib import Path
 
 user_input = sys.argv[1]
 folder_path = save_directory(user_input)
@@ -18,4 +18,4 @@ with open("data/outputs/meta.json", "w") as file:
 repo_tree.run()
 processor.run()
 embedding.run()
-retriever.run()
+chatbot.run()
