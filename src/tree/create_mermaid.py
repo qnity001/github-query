@@ -5,6 +5,7 @@ id_map = {}
 labels = {}
 subgraph_declarations = []
 edge_declarations = []
+class_declarations = ["\tclassDef file fill:#e0f7fa, stroke:#00796b, stroke-width:2px", "\tclassDef folder fill:#eeeeee, stroke:#424242, stroke-width:1px"]
 
 def get_tree():
     with open("../../data/outputs/repo_tree.json", "r") as file:
@@ -21,6 +22,11 @@ def walk_tree(name, node, parent_id = None):
 
     #if node["type"] == "file":
     subgraph_declarations.append(f'\t{current_id}["{name}"]')
+
+    if node["type"] == "file":
+        class_declarations.append(f"\tclass {current_id} file")
+    elif node["type"] == "folder":
+        class_declarations.append(f"\tclass {current_id} folder")
 
     if parent_id:
         edge_declarations.append(f"\t{parent_id} --> {current_id}")
@@ -41,6 +47,7 @@ def run():
     mermaid_lines = ["flowchart TD"]
     mermaid_lines += subgraph_declarations
     mermaid_lines += edge_declarations
+    mermaid_lines += class_declarations
     mermaid_code = "\n".join(mermaid_lines)
     with open("../../data/outputs/graph.mmd", "w") as file:
         file.write(mermaid_code)
