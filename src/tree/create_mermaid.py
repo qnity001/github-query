@@ -15,11 +15,20 @@ edge_declarations = []
 class_declarations = ["\tclassDef file fill:#e0f7fa, stroke:#00796b, stroke-width:2px", 
                       "\tclassDef folder fill:#eeeeee, stroke:#424242, stroke-width:1px"]
 
-########################## HELPER FUNCTIONS #################################################################################
+####################################### HELPER FUNCTIONS ##########################################################################
 
 def get_tree():
     with open("data/outputs/repo_tree.json", "r") as file:
         return json.load(file)
+    
+def extract_from_import(line):
+    if line.startswith("from ") and " import " in line:
+        parts = line.strip().split()
+        if len(parts) >= 4:
+            from_module = parts[1]
+            imported = parts[3]
+            return [f"{from_module}", f"{from_module}.{imported}"]
+    return None
     
 def extract_imports(path):
     if not path.endswith(".py"):
@@ -31,15 +40,28 @@ def extract_imports(path):
     parser = get_parser("python")
     tree = parser.parse(content)
     root = tree.root_node
-    query = Query(parser.language, queries.imports)
-    captures = query.captures(root)
 
-    imports = set()
+    imports = []
+
+    # For normal
+    query = Query(parser.language, queries.import_statement)
+    captures = query.captures(root)
     for nodes in captures.values():
         for node in nodes:
             start, end = node.start_byte, node.end_byte
-            imports.add(content[start:end].decode("utf-8", errors="ignore"))
-    return list(imports)
+            imports.append(content[start:end].decode("utf-8", errors="ignore"))
+    
+    
+    # For from import 
+    query = Query(parser.language, queries.import_from_statement)
+    captures = query.captures(root)
+    for nodes in captures.values():
+        for node in nodes:
+            start, end = node.start_byte, node.end_byte
+            statement = content[start:end].decode("utf-8", errors="ignore")
+            imports += extract_from_import(statement)
+    
+    return imports
 
 # Receive path and check if it exists in the map
 def convert_to_path(path):
@@ -96,5 +118,6 @@ def run():
     mermaid_lines += edge_declarations
     mermaid_lines += class_declarations
     mermaid_code = "\n".join(mermaid_lines)
+
     with open("data/outputs/graph.mmd", "w") as file:
         file.write(mermaid_code)
