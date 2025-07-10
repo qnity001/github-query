@@ -1,6 +1,7 @@
-#"""
+"""
+from src.return_path import delete_link_repo
 from src.return_path import save_directory
-from src.tree import repo_tree
+from src.tree import repo_tree, create_mermaid
 from src.chunking import processor
 from src.embedding import embedding
 from src.llm_query import chatbot
@@ -19,3 +20,8 @@ repo_tree.run()
 processor.run()
 embedding.run()
 chatbot.run()
+delete_link_repo(user_input, folder_path)
+"""
+
+from src.tree import create_mermaid
+create_mermaid.run()
