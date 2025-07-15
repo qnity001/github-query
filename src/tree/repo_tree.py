@@ -27,7 +27,7 @@ def create_tree(path, repo_root):
             if subtree:
                 tree[element.name] = {
                     "type": "folder", 
-                    "path": str(element.relative_to(repo_root)),
+                    "path": str(element.relative_to(repo_root)).replace("\\", "/"),
                     "children": subtree
                 }
 
@@ -35,7 +35,7 @@ def create_tree(path, repo_root):
             tree[element.name] = {
                 "type": "file",
                 "priority": str(element.name in priority),
-                "path": str(element.relative_to(repo_root))
+                "path": str(element.relative_to(repo_root)).replace("\\", "/")
             }
     return tree
 
