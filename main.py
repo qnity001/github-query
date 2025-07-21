@@ -1,4 +1,3 @@
-#'''
 import os
 import json
 from src.tree import create_mermaid, repo_tree
@@ -18,5 +17,4 @@ def run(user_input):
     create_mermaid.run()
     processor.run()
     embedding.run()
-    #chatbot.run()
-#'''
+    chatbot.run("How is the code being retrieved?")
