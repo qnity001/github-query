@@ -20,12 +20,9 @@ def make_query(user_query, chunks):
         ]
     )
 
-    print(response["message"]["content"])
+    return response["message"]["content"]
 
-def run():
-    while True:
-        user_query = input("Ask question from the codebase:")
-        if not user_query.split():
-            exit()
-        input_chunks = retriever.run(user_query)
-        make_query(user_query, input_chunks)
+def run(user_query):
+    input_chunks = retriever.run(user_query)
+    response = make_query(user_query, input_chunks)
+    return response
